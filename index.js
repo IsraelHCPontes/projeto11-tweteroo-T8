@@ -9,15 +9,27 @@ const usuarios = [];
 const tweets = [];
 
 app.post("/sign-up", (req, res) => {
-    const usuario = req.body;
-    usuarios.push(usuario);
-    res.send("ok");
+    const {username, avatar} = req.body;
+
+    if(!username || !avatar){
+        res.status(400).send('Todos os campos são obrigatórios')
+        return;
+    }
+    
+    usuarios.push({username, avatar});
+    res.status(201).send("ok");
 });
 
 app.post("/tweets", (req, res) => {
-    const tweet = req.body;
-    tweets.push(tweet);
-    res.send("ok");
+    const {username, tweet}= req.body;
+
+    if(!username || !tweet){
+        res.status(400).send('Todos os campos são obrigatórios')
+        return;
+    }
+
+    tweets.push({username, tweet});
+    res.status(201).send("ok");
 })
 
 app.get("/tweets", (req, res) => {
@@ -29,6 +41,14 @@ app.get("/tweets", (req, res) => {
     res.send(lestTweets);
 });
 
+
+app.get('/tweets/:username', (req, res) => {
+    const {username} = req.params;
+    const envios = tweets.filter(tweet => tweet.username === username)
+   
+    res.send(envios)
+})
+
 //O MAC USA PORTA 5000 PARA O CONTROL CENTER, LEMBRAR DE USAR 5001 PARA CODAR 
-app.listen(5000, () => console.log('Ouvindo na porta 5000'));
+app.listen(5001, () => console.log('Ouvindo na porta 5001'));
 
